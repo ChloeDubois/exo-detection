@@ -75,13 +75,34 @@ class Tonneau {
     return this.t;
   }
 
-  // TODO
+  // This function check if a "tonneau" comes accross a platform
   detectionSurface = () => {
-
-    // If surface detected
-    //clearInterval(this.intervalID);
+    const heightTon = parseInt((this.t.style.height).substring(0, this.t.style.height.length - 2));
+    const widthTon = parseInt((this.t.style.width).substring(0, this.t.style.width.length - 2));
+    // we loop through all platforms in array :
+    for (let index = 0; index < platforms.length; index++) {
+      const platform = platforms[index];
+      // we check if the platform position on Y axis is "similar" to the position of "tonneau" on same axis
+      // To do that, we check if the distance between platform and tonneau is less than 0.
+      if ((platform.top - (this.posY + heightTon) < 0)) {
+        // we check if the platform position on X axis is defined form the left or form the right.
+        // Depending on that, we check if the position of the "tonneau" is "included" in the position of the platform
+        // If true : we clear the interval. 
+        if (platform.left) {
+          if (this.posX + widthTon > platform.left && this.posX < platform.left + platform.width) {
+            clearInterval(this.intervalID)
+          }
+        }
+        if (platform.right) {
+          // Given that the position of the tonneau is defined from the left, we have to use the variable widthScreen 
+          // when the position of the platform is defined from the right.
+          if (widthScreen - this.posX > platform.right && widthScreen - (this.posX + widthTon) < platform.right + platform.width ) {
+            clearInterval(this.intervalID)
+          }
+        }
+      }
+    }
   }
-
 }
 
 function generateTonneau() {
